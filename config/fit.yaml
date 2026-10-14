@@ -1,0 +1,37 @@
+### The fitting protocol: 48 iterations x 128 substeps of the optimiser (any optax optimiser, `{name: arguments}`), the
+### library entry's regularisation in the loss, 4 restarts selected by the final training loss; 16 / 16 / 16 train /
+### validation / test experiments; 4 systems per seed, sampled in batches of 4; every seed of a fit in one batch.
+device: cpu
+
+library: regulatory
+model: baseline
+
+sampling:
+  seed: 1223334444
+  experiments:
+    train: 16
+    validation: 16
+    test: 16
+
+  samples: 4
+  batch: 4
+
+  plot: 4
+
+fitting:
+  seed: 123456789
+  iterations: 48
+  substeps: 128
+  optimizer:
+    adamaxw:
+      learning_rate: 1.0e-3
+      # decay rates of the first moment and of the infinity norm
+      b1: 0.1
+      b2: 0.99
+      # decoupled, on every parameter: each step shrinks the parameters by learning_rate x weight_decay
+      weight_decay: 1.0e-3
+  # steps per loop iteration of the solver scans (jax.lax.scan unroll); 1 = one step per iteration
+  unroll: 1
+  multistart: 4
+
+  plot: 4

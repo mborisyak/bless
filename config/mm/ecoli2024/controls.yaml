@@ -1,0 +1,32 @@
+### The E. coli designs: 24 h fed-batch cultivations at constant volume, four feed phases blended by the softmax of
+### `bless.mm.ecoli2024.CONTROL_SHARPNESS` (phase 1 acts from t = 0). Literature processes, batch glucose / feed, g/L:
+### 5 / 300 [An], 4-14 / 500 [Xu], 5 / 400 [Ha], 5-20 [Kr], feed 600 [SK] (sources as in realistic.yaml)
+controls:
+  f:
+    # dilution rate F/V, 1/h, one value per feed phase
+    uniform: {lower: 0.0, upper: 0.2, shape: [4]}
+  S_f:
+    # feed glucose, g/L (dilute, the volume held constant; literature feeds 300-600 g/L [An, Xu, Ha, SK])
+    const: [20.0]
+  ts:
+    # the centres of the four feed phases, h: equal intervals between 5 and 24 h (7.375, 12.125, 16.875, 21.625 h)
+    grid: { n: 4, origin: 5.0, horizon: 24.0 }
+
+  X:
+    # inoculum biomass, g/L ([An] inoculates at OD 0.1)
+    U: [ 0.5, 2.0 ]
+  S:
+    # batch glucose, g/L: 5 [An, Ha], 4-14 [Xu], 5-20 [Kr]
+    U: [ 2.0, 12.0 ]
+
+### sampling grids over 24 h, each point jittered by `delta` x half the spacing: X, S, A every hour (at-line samples,
+### hourly in [An]), DOTm every 12 min (an online probe)
+timestamps:
+  X:
+    grid-uniform: {delta: 0.25, n: 24, origin: 0.0, horizon: 24.0}
+  S:
+    grid-uniform: { delta: 0.25, n: 24, origin: 0.0, horizon: 24.0 }
+  A:
+    grid-uniform: { delta: 0.25, n: 24, origin: 0.0, horizon: 24.0 }
+  DOTm:
+    grid-uniform: { delta: 0.25, n: 120, origin: 0.0, horizon: 24.0 }

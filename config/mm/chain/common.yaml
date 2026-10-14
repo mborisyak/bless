@@ -1,0 +1,33 @@
+### The inhibitory-chain truth: synthetic log rate constants and enzyme totals, the design (initial `A`) and the
+### sampling grid; `A` is the observed variable.
+parameters:
+  log_k_A_E1__AE1:
+    U: [9.0, 11.0]
+  log_k_AE1__A_E1:
+    U: [8.0, 10.0]
+  log_k_AE1__BE1:
+    U: [9.0, 11.0]
+  log_k_BE1__B_E1:
+    U: [8.0, 10.0]
+  log_k_B_E1__BE1:
+    U: [11.0, 13.0]
+  log_k_B_E2__BE2:
+    U: [7.0, 9.0]
+  log_k_BE2__B_E2:
+    U: [ 7.0, 9.0 ]
+  log_k_BE2__PE2:
+    U: [ 6.0, 8.0 ]
+  log_k_PE2__P_E2:
+    U: [ 7.0, 9.0 ]
+  E1_total:
+    logit-normal: { lower: 0.0, upper: 1.0e-2, mu: 0.5, sigma: 1.0 }
+  E2_total:
+    logit-normal: { lower: 0.0, upper: 1.0e-2, mu: 0.5, sigma: 1.0 }
+
+controls:
+  A:
+    U: {lower: 0.0, upper: 3.0}
+
+timestamps:
+  A:
+    grid: {n: 12, origin: 0.0, horizon: 1.0}

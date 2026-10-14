@@ -1,0 +1,179 @@
+### Truth `ecoli2024` vs the reduced base `ecoli2024reduced` (no overflow, no acetate); dt 5e-3 truth, 1e-2 fitted.
+__name__: 'ecoli'
+
+
+
+ground-truth:
+  model:
+    ecoli2024: {}
+  profiles: ['ecoli2024.realistic', 'ecoli2024.controls', 'ecoli2024.likelihood']
+  solver:
+    rkc2:
+      dt: 5.0e-3
+      T: 24.0
+      stages: 4
+
+
+
+baseline:
+  model:
+    ecoli2024reduced: {}
+  profiles: ['ecoli2024reduced.realistic', 'ecoli2024.controls', 'ecoli2024.likelihood']
+  regularization: 1.0e-6
+  solver:
+    rkc2:
+      dt: 1.0e-2
+      T: 24.0
+      stages: 4
+
+
+
+### BLESS, latent 4, 12 hidden units; the memoryless correctors below are widened to its extension parameter count
+bless:
+  __template__:
+    model:
+      blessed-ecoli:
+        profiles: ['ecoli2024reduced.realistic']
+        latent: $UNITS.LATENT
+        units: $UNITS.UNITS
+    profiles: ['bless.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 24.0
+        stages: 4
+
+  __values__:
+    UNITS:
+      4w12: { LATENT: 4, UNITS: [12, ] }
+    REG: {reg3: 1.0e-3}
+
+
+
+### linear BLESS, its latent size matched to the extension parameter count of BLESS
+lin-bless:
+  __template__:
+    model:
+      lin-blessed-ecoli:
+        profiles: ['ecoli2024reduced.realistic']
+        latent: $LATENT
+        # A_z_z = -U U^T - min_eigen I: every latent mode decays at least at this rate, 1/h
+        min_eigen: 1.0e-2
+    profiles: ['lin-bless.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 24.0
+        stages: 4
+
+  __values__:
+    LATENT: {15: 15}
+    REG: {reg3: 1.0e-3}
+
+
+
+residual:
+  __template__:
+    model:
+      residual-ecoli:
+        profiles: ['ecoli2024reduced.realistic']
+        units: $UNITS
+    profiles: ['residual.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 24.0
+        stages: 4
+
+  __values__:
+    UNITS: {71: [71, ]}
+    REG: {reg3: 1.0e-3}
+
+
+
+
+sequential:
+  __template__:
+    model:
+      sequential-ecoli:
+        profiles: ['ecoli2024reduced.realistic']
+        units: $UNITS
+    profiles: ['sequential.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 24.0
+        stages: 4
+
+  __values__:
+    UNITS: {38: [38, ]}
+    REG: {reg3: 1.0e-3}
+
+
+
+### BLESS without the latent state: both heads on the coupled states, widened to the extension parameter count of BLESS
+sequential-residual:
+  __template__:
+    model:
+      sequential-residual-ecoli:
+        profiles: ['ecoli2024reduced.realistic']
+        units: $UNITS
+    profiles: ['sequential-residual.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 24.0
+        stages: 4
+
+  __values__:
+    UNITS: {24: [24, ]}
+    REG: {reg3: 1.0e-3}
+
+
+
+### BLESS with the parameter head alone: the latent state corrects the coupled parameters, no residual rates
+sequential-bless:
+  __template__:
+    model:
+      sequential-blessed-ecoli:
+        profiles: ['ecoli2024reduced.realistic']
+        latent: $UNITS.LATENT
+        units: $UNITS.UNITS
+    profiles: ['bless.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 24.0
+        stages: 4
+
+  __values__:
+    UNITS:
+      4w17: { LATENT: 4, UNITS: [17, ] }   # width-matched to BLESS 4w12
+    REG: {reg3: 1.0e-3}
+
+### BLESS with the residual head alone: the latent state drives residual rates, the parameters stay the base's
+residual-bless:
+  __template__:
+    model:
+      residual-blessed-ecoli:
+        profiles: ['ecoli2024reduced.realistic']
+        latent: $UNITS.LATENT
+        units: $UNITS.UNITS
+    profiles: ['bless.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 24.0
+        stages: 4
+
+  __values__:
+    UNITS:
+      4w21: { LATENT: 4, UNITS: [21, ] }   # width-matched to BLESS 4w12
+    REG: {reg3: 1.0e-3}

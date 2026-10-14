@@ -1,0 +1,55 @@
+### Derived from the truth's prior `config/mm/ecoli2024/realistic.yaml`.
+### The truth's bounds at encoded +-2.5: `U` half-width / erf(2.5 / sqrt 2) = / 0.98758, `logU` the same in log space.
+parameters:
+  H:
+    # truth H U [100, 200] at encoded +-2.5
+    U: [99.37, 200.7]
+
+  K_La:
+    # truth K_La U [100, 450] at encoded +-2.5
+    U: [97.79, 452.3]
+
+  K_p:
+    # truth K_p U [50, 500] at encoded +-2.5
+    U: [47.17, 502.9]
+
+  DOT_lim:
+    # truth DOT_lim U [0.9, 1.1] at encoded +-2.5
+    U: [0.8987, 1.102]
+
+  q_ox_max:
+    # truth q_ox_max U [0.6, 1.6] at encoded +-2.5
+    U: [0.5937, 1.607]
+
+  K_s_ox:
+    # truth K_s_ox U [0.05, 0.15] at encoded +-2.5
+    U: [0.04937, 0.1507]
+
+  Y_x_ox:
+    # truth Y_x_ox U [0.3, 0.6] widened by 0.333 of its width per side
+    U: [0.2, 0.7]
+
+  q_an_max:
+    # truth q_an_max U [0.025, 0.5] at encoded +-2.5
+    U: [0.02201, 0.503]
+
+  K_s_an:
+    # truth K_s_an U [0.05, 0.15] at encoded +-2.5
+    U: [0.04937, 0.1507]
+
+  ki_ox_an:
+    # truth ki_ox_an logU [0.01, 1] at encoded +-2.5
+    logU: [0.009714, 1.03]
+
+  Y_x_an:
+    # truth Y_x_an U [0.05, 0.3] widened by 0.333 of its width per side
+    U: [0.025, 0.3834]
+
+  K_o:
+    # truth K_o logU [0.001, 0.1] at encoded +-2.5
+    logU: [0.0009714, 0.103]
+
+  m_0:
+    # truth m_0 logU [0.01, 0.06] at encoded +-2.5
+    logU: [0.009887, 0.06068]
+

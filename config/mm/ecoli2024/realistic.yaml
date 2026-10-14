@@ -1,0 +1,117 @@
+### Prior of the E. coli truth `ecoli2024`; the base priors are derived from it. Sources:
+###   [Xu]  Xu, Jahic, Enfors 1999, Biotechnol Prog 15:81-90
+###   [An]  Anane, Lopez, Neubauer, Cruz Bournazou 2017, Biochem Eng J 125:23-30
+###   [Ha]  Hans et al. 2020, Bioengineering 7:145, PMC7711848
+###   [Kr]  Krausch et al. 2023, Bioengineering 10:808, PMC10376147
+###   [SK]  Schroder-Kleeberg et al. 2025, Bioengineering 12:1081, PMC12561460
+###   [Eg]  Kovarova-Kovar & Egli 1998, Microbiol Mol Biol Rev 62:646-666, PMC98929
+###   [Sm]  Smaluch et al. 2023, Eng Life Sci, doi 10.1002/elsc.202100157
+###   [Fi]  Fink, Held, Manhart 2023, PNAS, doi 10.1073/pnas.2207295120
+###   [Tr]  Tromans 1998, Hydrometallurgy 48:327-342
+###   [BK]  Benson & Krause 1984, Limnol Oceanogr 29:620-632
+###   [WS]  Weisenberger & Schumpe 1996, AIChE J 42:298-300
+###   [GO]  Garcia-Ochoa & Gomez 2009, Biotechnol Adv, doi 10.1016/j.biotechadv.2008.10.006
+###   [VR]  Van't Riet 1979, Ind Eng Chem Process Des Dev 18:357-364
+parameters:
+
+  # -- Oxygen transfer and measurement ---------------------------------------------------------------------------
+  H:
+    # inverse oxygen solubility, L/g (DOT fraction per g/L O2): air-saturated water at 37 C holds 6.7-7.0 mg/L O2
+    # [Tr, BK], 143-150 L/g; medium salts lower the solubility by a few per cent [WS]; 140 L/g [SK]
+    U: [100.0, 200.0]
+
+  K_La:
+    # volumetric oxygen transfer, 1/h: stirred lab tanks 10-1000 /h [GO, VR]; fitted per phase [An], constant [Ha, SK]
+    U: [100.0, 450.0]
+
+  K_p:
+    # probe response constant, 1/h (first-order lag, time constant tau = 1 / K_p) [An, VR]; tau fitted [SK]
+    U: [50.0, 500.0]
+
+  DOT_lim:
+    # saturation level of the probe signal, fraction (calibration margin); DOT* = 100 % [SK]
+    U: [0.9, 1.1]
+
+  # -- Glucose uptake, g/g/h: maximal rates of the oxidative, anaerobic and overflow routes. Total q_S,max measured
+  # 1.25-1.40 [Xu], 1.39-1.60 [Ha], 0.87-1.13 [Kr]; fitted 0.64 [An], 0.46-0.71 with bounds [0.2, 1.5] [SK]
+  q_ox_max:
+    U: [0.6, 1.6]
+
+  q_an_max:
+    U: [0.025, 0.5]
+
+  q_of_max:
+    U: [0.125, 0.65]
+
+  # -- Glucose half-saturation, g/L: 0.05 [Xu]; 0.037 (0.031-0.044) [An]; 0.009-0.011 [Kr]; 0.05 +- 0.03 and bounds
+  # [0.01, 0.09] [SK]; intrinsic chemostat values 3e-5 to 7e-3 [Eg, Sm, Fi]
+  K_s_ox:
+    U: [0.05, 0.15]
+
+  K_s_an:
+    U: [0.05, 0.15]
+
+  K_s_of:
+    U: [0.05, 0.15]
+
+  # -- Acetate inhibition of glucose uptake, g/L (q x K_i / (K_i + A)): K_i,S 4-5 [Xu]; K_ia 1.24 (1.01-1.47) [An]
+  Ki_a_ox:
+    logU: [1.0, 5.0]
+
+  Ki_a_an:
+    logU: [1.0, 5.0]
+
+  Ki_a_of:
+    logU: [1.0, 5.0]
+
+  # -- Inhibition of the anaerobic and overflow routes by the oxidative flux, dimensionless:
+  # q x ki q_ox_max / (ki q_ox_max + q_ox); at full q_ox the routes run at ki / (1 + ki) of their capacity
+  ki_ox_an:
+    logU: [0.01, 1.0]
+
+  ki_ox_of:
+    logU: [0.01, 1.0]
+
+  # -- Biomass yields on glucose, g/g; the oxygen yields are not sampled but derived, Y_o = 1.067 (1 - 1.2 Y_x)
+  # (`bless.mm.ecoli2024.oxygen_yield`)
+  Y_x_ox:
+    # oxidative route: 0.49-0.51 [Xu]; 0.39-0.56 [Kr]; 0.53 (0.51-0.56) [An]; 0.58-0.60 [Ha]; bounds [0.3, 0.5] [SK]
+    U: [0.3, 0.6]
+
+  Y_x_an:
+    # anaerobic route: 0.15 [Xu]; Y_xsof 0.227 (0.173-0.281) [An]
+    U: [0.05, 0.3]
+
+  Y_x_of:
+    # overflow route: as Y_x_an
+    U: [0.1, 0.3]
+
+  Y_a_of:
+    # acetate per glucose through the overflow route: Y_as 0.91 (0.83-0.99) [An]; 0.67 [SK]
+    U: [0.5, 1.0]
+
+  # -- Acetate uptake --------------------------------------------------------------------------------------------
+  q_a_max:
+    # acetate uptake, g/g/h: 0.06-0.20 [Xu]; 0.115 (0.101-0.129) [An]; 0.06-0.08 [Kr]; bounds [0.1, 1.5] [SK]
+    U: [0.05, 0.25]
+
+  K_a:
+    # acetate half-saturation, g/L: K_sa 0.0134 (0.0076-0.0192) [An]; 0.05 [Xu]; bounds [0.01, 1.0] [SK]
+    logU: [0.01, 0.1]
+
+  Ki_s_a:
+    # glucose inhibition of acetate uptake, g/L: K_is 2.12 (0.98-3.27) [An]
+    logU: [1.0, 5.0]
+
+  Y_x_a:
+    # biomass per acetate, g/g: 0.4 [Xu]; 0.57 (0.46-0.68) [An]; 0.40-0.48 [Ha]; bounds [0.25, 0.45] [SK]
+    U: [0.25, 0.75]
+
+  # -- Oxygen affinity and maintenance ---------------------------------------------------------------------------
+  K_o:
+    # oxygen half-saturation, fraction of air saturation: 0.0001 g/L O2 (~0.014 of saturation) [An]
+    logU: [0.001, 0.1]
+
+  m_0:
+    # maintenance, g/g/h: q_m 0.013 (0.011-0.015) [An]; 0.04 [Xu, SK]; 0.044-0.056 [Kr]
+    logU: [0.01, 0.06]

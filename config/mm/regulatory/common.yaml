@@ -1,0 +1,12 @@
+### The regulatory enzyme truth: synthetic log-normal rate constants.
+parameters:
+  k_A:
+    logN: {median: 2.0e+3, sigma: 1.0}
+  K_A:
+    logN: { median: 1.0e-1, sigma: 1.0 }
+  q_E:
+    logN: { median: 1.0e-2, sigma: 1.0 }
+  K_E:
+    logN: { median: 1.0, sigma: 1.0 }
+  k_E_deg:
+    logN: { median: 1.0, sigma: 1.0 }

@@ -1,0 +1,4 @@
+### Measurement noise of the regulatory truth (standard deviation).
+likelihood:
+  A:
+    normal: [ 0.05 ]

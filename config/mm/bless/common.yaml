@@ -1,0 +1,13 @@
+parameters:
+  w*_0_**:
+    glorot-normal: { axis: -1, gain: 1.0e-1 }
+  W*_**:
+    glorot-normal: { axis: -2, gain: 1.0e-1 }
+  b*_**:
+    glorot-normal: { axis: -1, gain: 1.0e-1 }
+
+  '**':
+    glorot-normal: { axis: -1, gain: 1.0e-1 }
+
+  z_initial:
+    glorot-normal: {axis: -1, gain: 1.0}

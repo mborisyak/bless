@@ -1,0 +1,7 @@
+### The Monod base of the enzyme libraries: synthetic log-uniform maximal rate `q` and half-saturation `K`
+### (the rate constant at substrate depletion, q / K, is at most 900 /h).
+parameters:
+  q:
+    logU: [0.02, 30.0]
+  K:
+    logU: [0.0333, 30.0]

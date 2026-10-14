@@ -1,0 +1,179 @@
+### Regulatory enzyme truth `regulatory` vs the Monod base `monod`; dt 5e-3 for the truth, 1e-2 for the fitted models.
+__name__: 'regulatory'
+
+
+
+ground-truth:
+  model:
+    regulatory: {}
+  profiles: ['regulatory.common', 'regulatory.controls', 'regulatory.likelihood']
+  solver:
+    rkc2:
+      dt: 5.0e-3
+      T: 1.0
+      stages: 4
+
+
+
+baseline:
+  model:
+    monod: {}
+  profiles: ['monod.common', 'regulatory.controls', 'regulatory.likelihood',]
+  regularization: 1.0e-6
+  solver:
+    rkc2:
+      dt: 1.0e-2
+      T: 1.0
+      stages: 4
+
+
+
+### BLESS, latent 4, 12 hidden units; the memoryless correctors below are widened to its extension parameter count
+bless:
+  __template__:
+    model:
+      blessed-monod:
+        profiles: ['monod.common']
+        latent: $UNITS.LATENT
+        units: $UNITS.UNITS
+    profiles: ['bless.common', 'regulatory.controls', 'regulatory.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 1.0
+        stages: 4
+
+  __values__:
+    UNITS:
+      4w12: { LATENT: 4, UNITS: [12, ] }
+    REG: {reg3: 1.0e-3}
+
+
+
+### linear BLESS, its latent size matched to the extension parameter count of BLESS
+lin-bless:
+  __template__:
+    model:
+      lin-blessed-monod:
+        profiles: ['monod.common']
+        latent: $LATENT
+        # A_z_z = -U U^T - min_eigen I: every latent mode decays at least at this rate, 1/h
+        min_eigen: 1.0e-2
+    profiles: ['lin-bless.common', 'regulatory.controls', 'regulatory.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 1.0
+        stages: 4
+
+  __values__:
+    LATENT: {15: 15}
+    REG: {reg3: 1.0e-3}
+
+
+
+residual:
+  __template__:
+    model:
+      residual-monod:
+        profiles: ['monod.common']
+        units: $UNITS
+    profiles: ['residual.common', 'regulatory.controls', 'regulatory.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 1.0
+        stages: 4
+
+  __values__:
+    UNITS: {103: [103, ]}
+    REG: {reg3: 1.0e-3}
+
+
+
+
+sequential:
+  __template__:
+    model:
+      sequential-monod:
+        profiles: ['monod.common']
+        units: $UNITS
+    profiles: ['sequential.common', 'regulatory.controls', 'regulatory.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 1.0
+        stages: 4
+
+  __values__:
+    UNITS: {77: [77, ]}
+    REG: {reg3: 1.0e-3}
+
+
+
+### BLESS without the latent state: both heads on the coupled states, widened to the extension parameter count of BLESS
+sequential-residual:
+  __template__:
+    model:
+      sequential-residual-monod:
+        profiles: ['monod.common']
+        units: $UNITS
+    profiles: ['sequential-residual.common', 'regulatory.controls', 'regulatory.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 1.0
+        stages: 4
+
+  __values__:
+    UNITS: {44: [44, ]}
+    REG: {reg3: 1.0e-3}
+
+
+
+### BLESS with the parameter head alone: the latent state corrects the coupled parameters, no residual rates
+sequential-bless:
+  __template__:
+    model:
+      sequential-blessed-monod:
+        profiles: ['monod.common']
+        latent: $UNITS.LATENT
+        units: $UNITS.UNITS
+    profiles: ['bless.common', 'regulatory.controls', 'regulatory.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 1.0
+        stages: 4
+
+  __values__:
+    UNITS:
+      4w17: { LATENT: 4, UNITS: [17, ] }   # width-matched to BLESS 4w12
+    REG: {reg3: 1.0e-3}
+
+### BLESS with the residual head alone: the latent state drives residual rates, the parameters stay the base's
+residual-bless:
+  __template__:
+    model:
+      residual-blessed-monod:
+        profiles: ['monod.common']
+        latent: $UNITS.LATENT
+        units: $UNITS.UNITS
+    profiles: ['bless.common', 'regulatory.controls', 'regulatory.likelihood']
+    regularization: $REG
+    solver:
+      rkc2:
+        dt: 1.0e-2
+        T: 1.0
+        stages: 4
+
+  __values__:
+    UNITS:
+      4w18: { LATENT: 4, UNITS: [18, ] }   # width-matched to BLESS 4w12
+    REG: {reg3: 1.0e-3}

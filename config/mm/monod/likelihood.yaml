@@ -1,0 +1,4 @@
+### Measurement noise of the Monod base (standard deviation); the chain library samples and scores with it.
+likelihood:
+  A:
+    N: [0.1]

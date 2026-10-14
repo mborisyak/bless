@@ -1,0 +1,20 @@
+parameters:
+  U_z_z:
+    glorot-normal: {axis: -2, gain: 1.0e-2}
+
+  b_z:
+    glorot-normal: { axis: -1, gain: 1.0e-1 }
+
+  w_**_z:
+    glorot-normal: { axis: -1, gain: 1.0e-1 }
+
+  A_z_p:
+    glorot-normal: { axis: -2, gain: 1.0e-2 }
+  B_z_r:
+    glorot-normal: { axis: -2, gain: 1.0e-2 }
+
+  '**':
+    glorot-normal: { axis: -1, gain: 1.0e-2 }
+
+  z_initial:
+    glorot-normal: { axis: -1, gain: 1.0 }

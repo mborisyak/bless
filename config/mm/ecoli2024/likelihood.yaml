@@ -1,0 +1,11 @@
+### Measurement noise, standard deviations: 0.1 g/L on biomass, glucose and acetate (at-line samples), 0.05 of air
+### saturation on the DOT probe.
+likelihood:
+  X:
+    N: [ 0.1 ]
+  S:
+    N: [ 0.1 ]
+  A:
+    N: [ 0.1 ]
+  DOTm:
+    N: [ 0.05 ]

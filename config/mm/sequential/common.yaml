@@ -1,0 +1,9 @@
+parameters:
+  W_*:
+    glorot-normal: {axis: -2, gain: 1.0e-2}
+  b_*:
+    glorot-normal: {axis: -1, gain: 1.0e-2}
+  '**':
+    normal: {mean: 0.0, sigma: 1.0}
+  w_0_**:
+    glorot-normal: { axis: -1 }

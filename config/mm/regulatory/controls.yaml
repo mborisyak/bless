@@ -1,0 +1,8 @@
+### The regulatory truth's design: one initial substrate level, five samples over the unit horizon.
+controls:
+  A:
+    U: {lower: 0.0, upper: 3.0}
+
+timestamps:
+  A:
+    grid: {n: 5, origin: 0.0, horizon: 1.0}

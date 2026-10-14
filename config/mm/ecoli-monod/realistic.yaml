@@ -1,0 +1,21 @@
+### Derived from the truth's prior `config/mm/ecoli2024/realistic.yaml`.
+### The truth's bounds at encoded +-2.5: `U` half-width / erf(2.5 / sqrt 2) = / 0.98758, `logU` the same in log space.
+### A single-route base's uptake ceiling is the truth's saturating total uptake (2.1).
+parameters:
+  q_s_max:
+    # truth q_ox_max U [0.6, 1.6] at encoded +-2.5;
+    # ceiling 2.1 = the truth's saturating total uptake through this one route; floor 0.1
+    U: [0.1, 2.1]
+
+  K_s:
+    # truth K_s_ox U [0.05, 0.15] at encoded +-2.5
+    U: [0.04937, 0.1507]
+
+  Y_s:
+    # truth Y_x_ox U [0.3, 0.6] widened by 0.333 of its width per side
+    U: [0.2, 0.7]
+
+  m_0:
+    # truth m_0 logU [0.01, 0.06] at encoded +-2.5
+    logU: [0.009887, 0.06068]
+
