@@ -12,7 +12,7 @@ from ..mm.solver import Solver
 from ..distributions import Sampler
 from .. import utils
 
-default_optimizer = optax.adamaxw(learning_rate=1.0e-3, b1=0.1, b2=0.99, weight_decay=1.0e-3)
+default_optimizer = optax.adamaxw(learning_rate=1.0e-3, b1=0.1, b2=0.99, weight_decay=1.0e-4)
 
 __all__ = [
   'MaximumLikelihood', 'Restarts'

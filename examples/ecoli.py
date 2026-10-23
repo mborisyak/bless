@@ -36,7 +36,7 @@ CHANNELS = {'X': 'biomass, g/L', 'S': 'glucose, g/L', 'A': 'acetate, g/L', 'DOTm
 ### adamaxw of the campaign protocol
 LEARNING_RATE = 1.0e-3
 B1, B2 = 0.1, 0.99
-WEIGHT_DECAY = 1.0e-3
+WEIGHT_DECAY = 1.0e-4
 PLOT_POINTS = 480
 
 def entries(library):

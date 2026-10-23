@@ -28,7 +28,8 @@ baseline:
 
 
 
-### BLESS, latent 4, 12 hidden units; the memoryless correctors below are widened to its extension parameter count
+### BLESS at a quarter, half, base (latent 4, 12 hidden units) and double capacity; the other models matched to its
+### extension parameter count at each capacity, every capacity at three regularisation strengths
 bless:
   __template__:
     model:
@@ -46,19 +47,22 @@ bless:
 
   __values__:
     UNITS:
+      1w3: { LATENT: 1, UNITS: [3, ] }
+      2w6: { LATENT: 2, UNITS: [6, ] }
       4w12: { LATENT: 4, UNITS: [12, ] }
-    REG: {reg3: 1.0e-3}
+      8w24: { LATENT: 8, UNITS: [24, ] }
+    REG: {reg1: 1.0e-1, reg2: 1.0e-2, reg3: 1.0e-3}
 
 
 
-### linear BLESS, its latent size matched to the extension parameter count of BLESS
+### linear BLESS, its latent size matched to the extension parameter count of BLESS at each capacity
 lin-bless:
   __template__:
     model:
       lin-blessed-ecoli:
         profiles: ['ecoli2024reduced.realistic']
         latent: $LATENT
-        # A_z_z = -U U^T - min_eigen I: every latent mode decays at least at this rate, 1/h
+        # A_z_z lower triangular, its diagonal -min_eigen - softplus(.): every latent mode decays at least at this rate, 1/h
         min_eigen: 1.0e-2
     profiles: ['lin-bless.common', 'ecoli2024.controls', 'ecoli2024.likelihood']
     regularization: $REG
@@ -69,8 +73,8 @@ lin-bless:
         stages: 4
 
   __values__:
-    LATENT: {15: 15}
-    REG: {reg3: 1.0e-3}
+    LATENT: {3: 3, 7: 7, 15: 15, 29: 29}
+    REG: {reg1: 1.0e-1, reg2: 1.0e-2, reg3: 1.0e-3}
 
 
 
@@ -89,8 +93,8 @@ residual:
         stages: 4
 
   __values__:
-    UNITS: {71: [71, ]}
-    REG: {reg3: 1.0e-3}
+    UNITS: {14: [14, ], 29: [29, ], 71: [71, ], 196: [196, ]}
+    REG: {reg1: 1.0e-1, reg2: 1.0e-2, reg3: 1.0e-3}
 
 
 
@@ -110,8 +114,8 @@ sequential:
         stages: 4
 
   __values__:
-    UNITS: {38: [38, ]}
-    REG: {reg3: 1.0e-3}
+    UNITS: {7: [7, ], 15: [15, ], 38: [38, ], 105: [105, ]}
+    REG: {reg1: 1.0e-1, reg2: 1.0e-2, reg3: 1.0e-3}
 
 
 
@@ -131,8 +135,8 @@ sequential-residual:
         stages: 4
 
   __values__:
-    UNITS: {24: [24, ]}
-    REG: {reg3: 1.0e-3}
+    UNITS: {4: [4, ], 10: [10, ], 24: [24, ], 68: [68, ]}
+    REG: {reg1: 1.0e-1, reg2: 1.0e-2, reg3: 1.0e-3}
 
 
 
@@ -154,8 +158,11 @@ sequential-bless:
 
   __values__:
     UNITS:
-      4w17: { LATENT: 4, UNITS: [17, ] }   # width-matched to BLESS 4w12
-    REG: {reg3: 1.0e-3}
+      1w4: { LATENT: 1, UNITS: [4, ] }
+      2w8: { LATENT: 2, UNITS: [8, ] }
+      4w17: { LATENT: 4, UNITS: [17, ] }
+      8w33: { LATENT: 8, UNITS: [33, ] }
+    REG: {reg1: 1.0e-1, reg2: 1.0e-2, reg3: 1.0e-3}
 
 ### BLESS with the residual head alone: the latent state drives residual rates, the parameters stay the base's
 residual-bless:
@@ -175,5 +182,8 @@ residual-bless:
 
   __values__:
     UNITS:
-      4w21: { LATENT: 4, UNITS: [21, ] }   # width-matched to BLESS 4w12
-    REG: {reg3: 1.0e-3}
+      1w7: { LATENT: 1, UNITS: [7, ] }
+      2w12: { LATENT: 2, UNITS: [12, ] }
+      4w21: { LATENT: 4, UNITS: [21, ] }
+      8w39: { LATENT: 8, UNITS: [39, ] }
+    REG: {reg1: 1.0e-1, reg2: 1.0e-2, reg3: 1.0e-3}

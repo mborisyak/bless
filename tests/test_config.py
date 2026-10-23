@@ -31,7 +31,7 @@ def test_expand_library():
     library = bless.utils.config.expand_library(yaml.safe_load(f))
 
   assert library['__name__'] == 'regulatory'
-  assert library['bless-4w12-reg3']['model']['blessed-monod']['latent'] == 4
-  assert library['bless-4w12-reg3']['model']['blessed-monod']['units'] == [12]
-  assert library['bless-4w12-reg3']['regularization'] == 1.0e-3
-  assert library['sequential-77-reg3']['model']['sequential-monod']['units'] == [77]
+  assert library['bless-4w12-reg2']['model']['blessed-monod']['latent'] == 4
+  assert library['bless-4w12-reg2']['model']['blessed-monod']['units'] == [12]
+  assert library['bless-4w12-reg2']['regularization'] == 1.0e-2
+  assert library['sequential-77-reg2']['model']['sequential-monod']['units'] == [77]

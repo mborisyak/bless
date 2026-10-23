@@ -1,0 +1,26 @@
+### The campaign's pending fits on CERN's HTCondor GPU pool, one job per (library, model) of condor/fits.txt, every
+### seed in the job; submitted from the AFS checkout on lxplus: condor_submit condor/fit.sub
+### Minimal request: one GPU (a MIG slice is enough: the heaviest fit peaks at 1.23 GiB of GPU memory),
+### one core, 2 GB of RAM (peak 1.74 GiB), the shortest flavour that covers the fit.
+universe       = vanilla
+executable     = condor/fit.sh
+arguments      = $(library) $(model)
+
+request_gpus   = 1
+### any GPU but the H100L vGPU slices, which lack the CUDA virtual memory management XLA needs to create a device
+requirements   = !regexp("H100L", TARGET.GPUs_DeviceName)
+request_cpus   = 1
+request_memory = 2048M
+request_disk   = 1G
++JobFlavour    = "$(flavour)"
++BlessFit      = "$(library) $(model)"
+
+output         = condor/logs/$(library).$(model).$(ClusterId).$(ProcId).out
+error          = condor/logs/$(library).$(model).$(ClusterId).$(ProcId).err
+log            = condor/logs/fit.$(ClusterId).log
+
+### the job list, condor/fits.txt unless given: condor_submit fits=<list> condor/fit.sub
+if !defined fits
+  fits = condor/fits.txt
+endif
+queue library, model, flavour from $(fits)

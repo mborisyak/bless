@@ -63,7 +63,7 @@ def test_log_uniform_in_sampler_profile():
   """`logU: [lower, upper]` in a profile decodes a hybrid's corrected base parameters into the box."""
   with open(os.path.join(os.path.dirname(HERE), 'config', 'library', 'regulatory.yaml')) as f:
     library = bless.utils.config.expand_library(yaml.safe_load(f))
-  m = bless.mm.from_config(library['bless-4w12-reg3']['model'])
+  m = bless.mm.from_config(library['bless-4w12-reg2']['model'])
   for f, prior, cond in zip(m.base.Parameters._fields, m.priors, m.conditions):
     assert type(prior).__name__ == 'log_uniform', f
     lo, hi = float(prior.decode(jnp.array(-40.0), cond)), float(prior.decode(jnp.array(40.0), cond))

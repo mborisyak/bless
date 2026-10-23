@@ -82,13 +82,13 @@ def run_pipeline(tmp_path, library, models, horizon=None):
 
 def test_pipeline_regulatory(tmp_path):
   run_pipeline(tmp_path, 'regulatory', [
-    'baseline', 'bless-4w12-reg3', 'residual-103-reg3', 'sequential-residual-44-reg3'
+    'baseline', 'bless-4w12-reg2', 'residual-103-reg2', 'sequential-residual-44-reg2'
   ])
 
 def test_seeds_fitted_together_match_seeds_fitted_alone(tmp_path):
   fit = load_script('fit')
   seeds = [3, 11]
-  model = 'bless-4w12-reg3'
+  model = 'bless-4w12-reg2'
   config = tiny_config('regulatory')
   config['sampling']['plot'] = 0
   config['fitting']['plot'] = 0
@@ -122,7 +122,7 @@ def test_seeds_fitted_together_match_seeds_fitted_alone(tmp_path):
 
 def test_pipeline_ecoli_mixed_channel_lengths(tmp_path):
   ### the reduced base observes X, S at 24 points and DOTm at 120
-  run_pipeline(tmp_path, 'ecoli', ['baseline', 'bless-4w12-reg3'], horizon=0.5)
+  run_pipeline(tmp_path, 'ecoli', ['baseline', 'bless-4w12-reg2'], horizon=0.5)
 
 def test_euler_matches_rkc2_on_a_controlled_model(rng):
   model = bless.mm.EColi2024Reduced()

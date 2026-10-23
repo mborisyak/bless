@@ -23,8 +23,7 @@ The package is used from the working tree:
 
 The campaign, a dataset per (library, seed) and every model fitted for all seeds in one process:
 
-    snakemake all --cores 11 --resources gpu=1
-    snakemake all --executor slurm --jobs 6 --resources gpu=1
+    snakemake all -c11 --resources gpu=1
 
 Results: `scripts/results_table.py`. One dataset and one fit by hand, with `config/fit.yaml` as the base config:
 

@@ -1,5 +1,5 @@
 parameters:
-  U_z_z:
+  L_z_z:
     glorot-normal: {axis: -2, gain: 1.0e-2}
 
   b_z:

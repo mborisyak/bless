@@ -29,7 +29,7 @@ fitting:
       b1: 0.1
       b2: 0.99
       # decoupled, on every parameter: each step shrinks the parameters by learning_rate x weight_decay
-      weight_decay: 1.0e-3
+      weight_decay: 1.0e-4
   # steps per loop iteration of the solver scans (jax.lax.scan unroll); 1 = one step per iteration
   unroll: 1
   multistart: 4

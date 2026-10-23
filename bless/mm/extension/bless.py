@@ -19,7 +19,7 @@ class LinBLESS(HybridExtension):
   @classmethod
   def extension_parameters(cls, ) -> Sequence[str]:
     return (
-      'U_z_z',
+      'L_z_z',
       'b_z',
       'B_z_r',
       'A_z_p',
@@ -45,23 +45,24 @@ class LinBLESS(HybridExtension):
     )
 
   def internal_parameters(self, parameters):
-    *_, n = parameters.U_z_z.shape
-    A_z_z = -parameters.U_z_z @ jnp.swapaxes(parameters.U_z_z, -2, -1)
-    if self.min_eigen is not None:
-      A_z_z = A_z_z - self.min_eigen * jnp.eye(n)
+    ### A_z_z: the strictly lower triangle of L_z_z, its diagonal (the eigenvalues) -min_eigen - softplus(diag L_z_z)
+    L = parameters.L_z_z
+    *_, n = L.shape
+    diagonal = -self.min_eigen - jax.nn.softplus(jnp.diagonal(L, axis1=-2, axis2=-1))
+    A_z_z = jnp.tril(L, k=-1) + diagonal[..., None, :] * jnp.eye(n)
 
     return self.InternalParameters(
       A_z_z=A_z_z,
-      **{k: getattr(parameters, k) for k in parameters._fields if k not in ('U_z_z', )}
+      **{k: getattr(parameters, k) for k in parameters._fields if k not in ('L_z_z', )}
     )
 
   @classmethod
-  def from_config(cls, profiles, latent: int, root=None, library=None, **kwargs):
+  def from_config(cls, profiles, latent: int, min_eigen: float, root=None, library=None, **kwargs):
     from ... import distributions
     condition, distribution, _, _ = distributions.load(cls.Base, *profiles, root=root, library=library)
-    return cls(distribution.parameters, condition.parameters, latent=latent, **kwargs)
+    return cls(distribution.parameters, condition.parameters, latent=latent, min_eigen=min_eigen, **kwargs)
 
-  def __init__(self, priors, conditions, latent: int, min_eigen: float | None=None, **kwargs):
+  def __init__(self, priors, conditions, latent: int, min_eigen: float, **kwargs):
     self.latent = latent
     self.min_eigen = min_eigen
     self.base = self.Base.from_config(**kwargs)
@@ -85,7 +86,7 @@ class LinBLESS(HybridExtension):
     n_r = len(self.coupled_states)
 
     return self.Parameters(
-      U_z_z=(n_z, n_z), A_z_p=(n_z, n_p), B_z_r=(n_z, n_r), b_z=(n_z, ),
+      L_z_z=(n_z, n_z), A_z_p=(n_z, n_p), B_z_r=(n_z, n_r), b_z=(n_z, ),
       **{f'w_state_{k}_z': (n_z,) for k in self.coupled_states},
 
       **{f'a_state_{k}_p': (n_p,) for k in self.coupled_states},
@@ -127,9 +128,7 @@ class LinBLESS(HybridExtension):
       for field in self.coupled_states
     )
 
-    z_reg = 0.1 * z * jnp.abs(z)
-
-    dz_dt = z_z + z_coupled - z_reg + b
+    dz_dt = z_z + z_coupled + b
 
     return {'z': dz_dt}
 
